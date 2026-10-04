@@ -13,7 +13,7 @@
 | ภาษาของเนื้อหา | ไทย โดยคงศัพท์เทคนิคเป็นภาษาอังกฤษ |
 | แนวทางออกแบบ | Art Museum, minimal, white theme, professional |
 | แหล่งข้อมูล | `resume-theme5.html` ในโฟลเดอร์โปรเจกต์ |
-| สถานะ | รันได้ในเครื่อง ยังไม่ได้ `git init` และยังไม่ได้ deploy |
+| สถานะ | ออนไลน์ที่ https://supakrit-studio.vercel.app โค้ดอยู่ที่ https://github.com/Supakrit-Julamanee/supakrit-studio (Private) |
 
 ## 2. Tech stack
 
@@ -341,6 +341,6 @@ src/
 - ยังไม่ได้วัดฟอนต์และ layout ใน Safari และ Firefox
 - ไม่มี automated test
 - ไม่มีเวอร์ชันภาษาอังกฤษ
-- ไม่มีภาพ Open Graph สำหรับตอนแชร์ลิงก์ และยังไม่ได้ตั้ง `metadataBase` เพราะยังไม่มีโดเมน
-- ยังไม่ได้ `git init` และยังไม่ได้ deploy
-- `resume-theme5.html` ในโฟลเดอร์โปรเจกต์มีข้อมูลส่วนตัวที่ไม่ได้แสดงบนเว็บ ควรย้ายออกหรือใส่ใน `.gitignore` ก่อน push ขึ้น repo สาธารณะ
+- ไม่มีภาพ Open Graph สำหรับตอนแชร์ลิงก์ และยังไม่ได้ตั้ง `metadataBase` เป็นโดเมน production
+- Vercel ยังไม่ได้เชื่อมกับ repo บน GitHub การ push จึงยังไม่ deploy อัตโนมัติ ต้องรัน `vercel deploy --prod` เอง
+- `resume-theme5.html` ในโฟลเดอร์โปรเจกต์มีข้อมูลส่วนตัวที่ไม่ได้แสดงบนเว็บ ไฟล์นี้ถูก ignore ใน `.gitignore` จึงไม่อยู่ใน repo และไม่ถูก deploy
