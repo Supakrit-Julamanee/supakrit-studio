@@ -1,20 +1,21 @@
-import { skills } from "@/content/profile";
+import type { Content } from "@/content";
+import { skills } from "@/content/shared";
 import { Section } from "./section";
 
-export function Skills() {
+export function Skills({ t }: { t: Content }) {
   return (
-    <Section id="skills" title="ทักษะ" titleEn="Stack">
-      <div className="space-y-9 lg:space-y-12">
+    <Section id="skills" t={t}>
+      <div className="space-y-7 md:space-y-9 lg:space-y-10">
         {skills.map(({ group, items }) => (
-          <div key={group} className="lg:grid lg:grid-cols-12 lg:gap-x-8">
-            <h3
-              className="text-label font-semibold lg:col-span-3 lg:pt-2.5"
-              lang="en"
-            >
+          <div
+            key={group}
+            className="md:grid md:grid-cols-12 md:items-baseline md:gap-x-6 lg:gap-x-8"
+          >
+            <h3 className="text-label font-semibold md:col-span-3" lang="en">
               {group}
             </h3>
             <ul
-              className="mt-1.5 font-display text-list font-light lg:col-span-9 lg:mt-0"
+              className="mt-1.5 text-list font-light md:col-span-9 md:mt-0"
               lang="en"
             >
               {items.map((item, index) => (

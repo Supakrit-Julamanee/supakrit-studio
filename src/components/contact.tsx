@@ -1,48 +1,51 @@
-import { contact } from "@/content/profile";
+import { Fragment } from "react";
+import type { Content } from "@/content";
+import { Icon } from "./icon";
 import { Section } from "./section";
 
-const [email, ...others] = contact.links;
-
-export function Contact() {
+export function Contact({ t }: { t: Content }) {
   return (
-    <Section id="contact" title="ติดต่อ" titleEn="Contact">
-      <div className="lg:grid lg:grid-cols-12 lg:items-baseline lg:gap-x-8">
-        <p className="lg:col-span-9 lg:col-start-4" lang="en">
-          <a
-            href={email.href}
-            className="link font-display text-mail md:font-light [overflow-wrap:anywhere]"
+    <Section id="contact" t={t}>
+      {/* โครงเดียวกับส่วนทักษะ: ป้ายอยู่คอลัมน์ซ้าย ค่าอยู่คอลัมน์ขวา แต่ป้ายเป็นไอคอน
+          บนจอแคบกว่า 768 px ไอคอนอยู่หน้าค่าในบรรทัดเดียวกัน */}
+      <dl className="space-y-5 md:space-y-6">
+        {t.contact.map(({ icon, label, text, href }) => (
+          <div
+            key={icon}
+            className="flex gap-3.5 text-mail min-[22.5rem]:font-light md:grid md:grid-cols-12 md:gap-x-6 lg:gap-x-8"
           >
-            {email.text}
-          </a>
-        </p>
-        <p className="mt-5 text-label lg:col-span-3 lg:col-start-1 lg:row-start-1 lg:mt-0">
-          <span className="block text-graphite">ตำแหน่งที่สนใจ</span>
-          <span lang="en">{contact.seeking}</span>
-        </p>
-
-        <dl className="mt-10 border-b border-pencil lg:col-span-9 lg:col-start-4 lg:mt-14">
-          {others.map(({ label, text, href }) => (
-            <div
-              key={label}
-              className="border-t border-pencil py-4 sm:grid sm:grid-cols-[7rem_1fr] sm:items-baseline"
+            {/* สูงเท่าหนึ่งบรรทัดของค่า ไอคอนจึงอยู่กึ่งกลางบรรทัดแรกเสมอ แม้ค่าจะยาวจนขึ้นสองบรรทัด */}
+            <dt
+              title={label}
+              className="flex h-[1lh] shrink-0 items-center md:col-span-3"
             >
-              <dt className="text-label text-graphite">{label}</dt>
-              <dd lang="en">
-                <a
-                  href={href}
-                  className="link font-display text-lead [overflow-wrap:anywhere]"
-                  {...(href.startsWith("http") && {
-                    target: "_blank",
-                    rel: "noopener noreferrer",
-                  })}
-                >
-                  {text}
-                </a>
-              </dd>
-            </div>
-          ))}
-        </dl>
-      </div>
+              <Icon name={icon} className="size-5" />
+              <span className="sr-only">{label}</span>
+            </dt>
+            <dd className="min-w-0 md:col-span-9" lang="en">
+              <a
+                href={href}
+                className="link [overflow-wrap:anywhere]"
+                {...(href.startsWith("http") && {
+                  target: "_blank",
+                  rel: "noopener noreferrer",
+                })}
+              >
+                {/* ลิงก์ที่ยาวเกินจอขึ้นบรรทัดใหม่หลังเครื่องหมายทับ ชื่อบัญชีที่มีขีดไม่ถูกตัดกลาง */}
+                {text.split("/").map((part, index, parts) => (
+                  <Fragment key={part}>
+                    <span className={part.includes("-") ? "whitespace-nowrap" : ""}>
+                      {part}
+                      {index < parts.length - 1 && "/"}
+                    </span>
+                    {index < parts.length - 1 && <wbr />}
+                  </Fragment>
+                ))}
+              </a>
+            </dd>
+          </div>
+        ))}
+      </dl>
     </Section>
   );
 }

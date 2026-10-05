@@ -1,18 +1,12 @@
 import type { CSSProperties } from "react";
-import {
-  monthNames,
-  months,
-  years,
-  type Month,
-  type Stroke,
-} from "@/content/timeline";
+import { years, type Month, type Stroke } from "@/content/timeline";
 
 const CELL = 100;
 
 const round = (n: number) => Math.round(n * 100) / 100;
 
 // เส้นขนานหนึ่งชุดในช่องสี่เหลี่ยมขนาด size ที่มุมซ้ายบนอยู่ที่ (x, y)
-export function hatchPath(
+function hatchPath(
   stroke: Stroke,
   x: number,
   y: number,
@@ -72,16 +66,6 @@ function Sheet({
           <g key={`${cell.year}-${cell.month}`}>
             <title>{cell.label}</title>
             <rect x={x} y={y} width={CELL} height={CELL} fill="transparent" />
-            {cell.open && (
-              <rect
-                x={x}
-                y={y}
-                width={CELL}
-                height={CELL}
-                className="drawing-open fill-klein"
-                style={order}
-              />
-            )}
             {cell.strokes.map((stroke) => (
               <path
                 key={stroke}
@@ -112,12 +96,15 @@ export function HatchSwatch({ stroke }: { stroke: Stroke }) {
   );
 }
 
-const description =
-  "ภาพวาดลายเส้นแสดงช่วงเวลาทำงานเป็นรายเดือน ตั้งแต่ ม.ค. 2024 ถึง ธ.ค. 2026 " +
-  "มิ.ย. ถึง ธ.ค. 2024 ตำแหน่ง Software Developer ที่ Skyfrog ทำทั้งงาน Frontend และ Backend " +
-  "ก.พ. 2025 ถึง ส.ค. 2026 ตำแหน่ง Frontend Developer ที่ยูนิกซ์เดฟ";
-
-export function MonthDrawing() {
+export function MonthDrawing({
+  months,
+  monthNames,
+  description,
+}: {
+  months: Month[];
+  monthNames: string[];
+  description: string;
+}) {
   return (
     <div>
       <p className="sr-only">{description}</p>
