@@ -85,7 +85,7 @@ export function ChatPanel({
       role="dialog"
       aria-label={t.title}
       hidden={!open}
-      className="fixed inset-x-0 bottom-0 z-20 flex h-[min(34rem,85dvh)] flex-col border-t border-ink bg-wall sm:inset-x-auto sm:bottom-5 sm:right-5 sm:w-[24rem] sm:border"
+      className="fixed inset-0 z-20 flex flex-col border-ink bg-wall sm:inset-auto sm:bottom-5 sm:right-5 sm:h-[min(34rem,85dvh)] sm:w-[24rem] sm:border"
     >
       <header className="flex items-center justify-between gap-4 border-b border-pencil py-3 pl-4 pr-3">
         <h2 className="text-label font-semibold">{t.title}</h2>
@@ -103,7 +103,7 @@ export function ChatPanel({
       <div
         ref={list}
         aria-live="polite"
-        className="flex-1 space-y-4 overflow-y-auto p-4 text-label"
+        className="flex-1 space-y-4 overflow-y-auto overscroll-contain p-4 text-label"
       >
         <p className="text-graphite">{t.hint}</p>
 
