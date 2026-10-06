@@ -65,11 +65,9 @@ export async function POST(request: Request) {
   const key = process.env.GEMINI_API_KEY;
   if (!key) return fail("unavailable", 503);
 
-  // รับเฉพาะคำขอที่มาจากหน้าเว็บนี้เอง
-  const origin = request.headers.get("origin");
-  if (!origin || new URL(origin).host !== request.headers.get("host")) {
-    return fail("invalid", 403);
-  }
+  // รับเฉพาะคำขอที่มาจากหน้าเว็บนี้เอง Origin ที่ไม่มีหรืออ่านเป็น URL ไม่ได้ก็ไม่รับ
+  const origin = URL.parse(request.headers.get("origin") ?? "");
+  if (origin?.host !== request.headers.get("host")) return fail("invalid", 403);
 
   const ip =
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
