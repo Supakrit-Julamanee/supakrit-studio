@@ -1,5 +1,6 @@
 import { content } from "@/content";
 import type { Locale } from "@/content/locale";
+import { ChatWidget } from "./chat-widget";
 import { Contact } from "./contact";
 import { Education } from "./education";
 import { Experience } from "./experience";
@@ -23,6 +24,8 @@ export function SitePage({ locale }: { locale: Locale }) {
         <Contact t={t} />
       </main>
       <SiteFooter t={t} />
+      {/* แชตบอทแสดงเมื่อตั้ง GEMINI_API_KEY ไว้ตอน build เท่านั้น ถ้าไม่มี key หน้าเว็บจะไม่มีปุ่มแชต */}
+      {process.env.GEMINI_API_KEY && <ChatWidget t={t.chat} />}
     </>
   );
 }

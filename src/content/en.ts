@@ -150,4 +150,26 @@ export const en: Content = {
   footer: {
     builtWith: "Built with Next.js, TypeScript and Tailwind CSS",
   },
+  chat: {
+    open: "Ask about Supakrit",
+    title: "Ask about Supakrit",
+    close: "Close",
+    hint: "An AI answers using only what is on this page, and it can still get things wrong. Please don\u2019t type personal information.",
+    placeholder: "Type a question",
+    send: "Send",
+    thinking: "Answering\u2026",
+    you: "You",
+    assistant: "Assistant",
+    suggestions: [
+      "What does he work with?",
+      "Where has he worked?",
+      "How do I contact him?",
+    ],
+    errors: {
+      rate_limited: "Too many questions right now. Try again in a minute.",
+      too_long: "That question is too long. Keep it under 500 characters.",
+      unavailable:
+        "The assistant can\u2019t answer right now. You can email Supakrit from the contact section instead.",
+    },
+  },
 };

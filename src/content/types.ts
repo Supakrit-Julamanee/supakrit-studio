@@ -17,6 +17,23 @@ type Job = {
 
 export type SectionId = "experience" | "skills" | "education" | "contact";
 
+// ข้อความของแชตบอท ส่งให้ Client Component ได้เพราะเป็นข้อความล้วน
+export type ChatText = {
+  open: string;
+  title: string;
+  close: string;
+  hint: string;
+  placeholder: string;
+  send: string;
+  thinking: string;
+  // ชื่อผู้พูด สำหรับโปรแกรมอ่านหน้าจอ
+  you: string;
+  assistant: string;
+  suggestions: string[];
+  // คีย์ตรงกับรหัสข้อผิดพลาดที่ /api/chat ส่งกลับ
+  errors: { rate_limited: string; too_long: string; unavailable: string };
+};
+
 // ข้อความทั้งหมดของหน้าในหนึ่งภาษา
 export type Content = {
   locale: Locale;
@@ -51,4 +68,5 @@ export type Content = {
   // label ไม่แสดงเป็นตัวหนังสือ ใช้เป็นชื่อของไอคอนสำหรับโปรแกรมอ่านหน้าจอและ tooltip
   contact: { icon: IconName; label: string; text: string; href: string }[];
   footer: { builtWith: string };
+  chat: ChatText;
 };
