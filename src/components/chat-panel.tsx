@@ -22,6 +22,7 @@ export function ChatPanel({
   const [draft, setDraft] = useState("");
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<ErrorCode | null>(null);
+  const frame = useRef<HTMLDivElement>(null);
   const input = useRef<HTMLInputElement>(null);
   const list = useRef<HTMLDivElement>(null);
 
@@ -40,6 +41,37 @@ export function ChatPanel({
   useEffect(() => {
     list.current?.scrollTo({ top: list.current.scrollHeight });
   }, [turns, pending, error]);
+
+  // แป้นพิมพ์บนจอของมือถือบังส่วนล่างของหน้า แต่ขอบล่างที่ position: fixed ยึดอยู่ไม่ขยับตาม
+  // แผงที่ชิดขอบล่างจึงถูกบังไปพร้อมช่องพิมพ์ กรอบของแผงจึงตามส่วนของหน้าที่มองเห็นจริง (visual viewport)
+  // เมื่อแป้นพิมพ์เปิด แผงจะอยู่เหนือแป้นพิมพ์และสูงไม่เกินส่วนที่มองเห็น
+  useEffect(() => {
+    const viewport = window.visualViewport;
+    const style = frame.current?.style;
+    if (!open || !viewport || !style) return;
+
+    const fit = () => {
+      // ตอนผู้ชมซูมหน้า กรอบกลับไปเท่ากับทั้งจอตามค่าเริ่มต้นใน className
+      const zoomed = Math.abs(viewport.scale - 1) > 0.01;
+      style.setProperty(
+        "--frame-top",
+        zoomed ? null : `${viewport.offsetTop}px`,
+      );
+      style.setProperty(
+        "--frame-height",
+        zoomed ? null : `${viewport.height}px`,
+      );
+      // แผงเปลี่ยนความสูงแล้ว ข้อความล่าสุดต้องยังอยู่ในสายตา
+      if (!zoomed) list.current?.scrollTo({ top: list.current.scrollHeight });
+    };
+    fit();
+    viewport.addEventListener("resize", fit);
+    viewport.addEventListener("scroll", fit);
+    return () => {
+      viewport.removeEventListener("resize", fit);
+      viewport.removeEventListener("scroll", fit);
+    };
+  }, [open]);
 
   async function ask(question: string) {
     const text = question.trim();
@@ -80,102 +112,108 @@ export function ChatPanel({
   }
 
   return (
-    <section
-      id={id}
-      role="dialog"
-      aria-label={t.title}
-      hidden={!open}
-      className="fixed inset-x-0 bottom-0 z-20 flex h-[min(34rem,85dvh)] flex-col border-t border-ink bg-wall sm:inset-x-auto sm:bottom-5 sm:right-5 sm:w-[24rem] sm:border"
+    // กรอบเท่ากับส่วนของหน้าที่มองเห็น แผงชิดขอบล่างของกรอบ ตัวกรอบเองไม่รับการแตะหรือคลิก
+    <div
+      ref={frame}
+      className="pointer-events-none fixed inset-x-0 top-[var(--frame-top,0px)] z-20 flex h-[var(--frame-height,100%)] items-end justify-end sm:p-5"
     >
-      <header className="flex items-center justify-between gap-4 border-b border-pencil py-3 pl-4 pr-3">
-        <h2 className="text-label font-semibold">{t.title}</h2>
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label={t.close}
-          title={t.close}
-          className="cursor-pointer p-2 transition-colors hover:text-klein"
-        >
-          <Icon name="close" className="size-4" />
-        </button>
-      </header>
-
-      <div
-        ref={list}
-        aria-live="polite"
-        className="flex-1 space-y-4 overflow-y-auto p-4 text-label"
+      <section
+        id={id}
+        role="dialog"
+        aria-label={t.title}
+        hidden={!open}
+        className="pointer-events-auto flex h-[min(34rem,85dvh)] max-h-full w-full flex-col border-t border-ink bg-wall sm:w-[24rem] sm:border"
       >
-        <p className="text-graphite">{t.hint}</p>
-
-        {/* คำถามตัวอย่าง แสดงก่อนเริ่มคุยเท่านั้น */}
-        {turns.length === 0 && (
-          <ul className="flex flex-wrap gap-2">
-            {t.suggestions.map((question) => (
-              <li key={question}>
-                <button
-                  type="button"
-                  onClick={() => void ask(question)}
-                  className="cursor-pointer border border-pencil px-3 py-1.5 text-left transition-colors hover:border-klein hover:text-klein"
-                >
-                  {question}
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
-
-        {/* คำถามของผู้ชมอยู่ชิดขวาบนพื้นสีหมึก คำตอบอยู่ชิดซ้ายเป็นตัวหนังสือล้วน */}
-        {turns.map(({ role, content }, index) => (
-          <p
-            key={index}
-            className={`whitespace-pre-wrap wrap-anywhere ${
-              role === "user"
-                ? "ml-auto w-fit max-w-[85%] bg-ink px-3 py-2 text-wall"
-                : "max-w-[92%]"
-            }`}
+        <header className="flex items-center justify-between gap-4 border-b border-pencil py-3 pl-4 pr-3">
+          <h2 className="text-label font-semibold">{t.title}</h2>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label={t.close}
+            title={t.close}
+            className="cursor-pointer p-2 transition-colors hover:text-klein"
           >
-            <span className="sr-only">{t.speakers[role]}: </span>
-            {content}
-          </p>
-        ))}
+            <Icon name="close" className="size-4" />
+          </button>
+        </header>
 
-        {pending && <p className="text-graphite">{t.thinking}</p>}
-        {error && (
-          <p role="alert" className="border-l border-ink pl-3">
-            {t.errors[error]}
-          </p>
-        )}
-      </div>
-
-      <form
-        onSubmit={(event) => {
-          event.preventDefault();
-          void ask(draft);
-        }}
-        className="flex items-center gap-2 border-t border-pencil p-3"
-      >
-        {/* ขนาด 17 px: iOS จะไม่ซูมหน้าเมื่อแตะช่องพิมพ์ */}
-        <input
-          ref={input}
-          type="text"
-          value={draft}
-          onChange={(event) => setDraft(event.target.value)}
-          maxLength={MAX_QUESTION_CHARS}
-          placeholder={t.placeholder}
-          aria-label={t.placeholder}
-          autoComplete="off"
-          className="min-w-0 flex-1 bg-transparent px-1 py-2 text-body placeholder:text-graphite focus-visible:outline-offset-0"
-        />
-        <button
-          type="submit"
-          disabled={pending || draft.trim() === ""}
-          aria-label={t.send}
-          title={t.send}
-          className="flex size-10 shrink-0 cursor-pointer items-center justify-center bg-ink text-wall transition-colors hover:bg-klein disabled:cursor-default disabled:opacity-40 disabled:hover:bg-ink"
+        <div
+          ref={list}
+          aria-live="polite"
+          className="flex-1 space-y-4 overflow-y-auto overscroll-contain p-4 text-label"
         >
-          <Icon name="send" className="size-4" />
-        </button>
-      </form>
-    </section>
+          <p className="text-graphite">{t.hint}</p>
+
+          {/* คำถามตัวอย่าง แสดงก่อนเริ่มคุยเท่านั้น */}
+          {turns.length === 0 && (
+            <ul className="flex flex-wrap gap-2">
+              {t.suggestions.map((question) => (
+                <li key={question}>
+                  <button
+                    type="button"
+                    onClick={() => void ask(question)}
+                    className="cursor-pointer border border-pencil px-3 py-1.5 text-left transition-colors hover:border-klein hover:text-klein"
+                  >
+                    {question}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          {/* คำถามของผู้ชมอยู่ชิดขวาบนพื้นสีหมึก คำตอบอยู่ชิดซ้ายเป็นตัวหนังสือล้วน */}
+          {turns.map(({ role, content }, index) => (
+            <p
+              key={index}
+              className={`whitespace-pre-wrap wrap-anywhere ${
+                role === "user"
+                  ? "ml-auto w-fit max-w-[85%] bg-ink px-3 py-2 text-wall"
+                  : "max-w-[92%]"
+              }`}
+            >
+              <span className="sr-only">{t.speakers[role]}: </span>
+              {content}
+            </p>
+          ))}
+
+          {pending && <p className="text-graphite">{t.thinking}</p>}
+          {error && (
+            <p role="alert" className="border-l border-ink pl-3">
+              {t.errors[error]}
+            </p>
+          )}
+        </div>
+
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            void ask(draft);
+          }}
+          className="flex items-center gap-2 border-t border-pencil p-3"
+        >
+          {/* ขนาด 17 px: iOS จะไม่ซูมหน้าเมื่อแตะช่องพิมพ์ */}
+          <input
+            ref={input}
+            type="text"
+            value={draft}
+            onChange={(event) => setDraft(event.target.value)}
+            maxLength={MAX_QUESTION_CHARS}
+            placeholder={t.placeholder}
+            aria-label={t.placeholder}
+            autoComplete="off"
+            className="min-w-0 flex-1 bg-transparent px-1 py-2 text-body placeholder:text-graphite focus-visible:outline-offset-0"
+          />
+          <button
+            type="submit"
+            disabled={pending || draft.trim() === ""}
+            aria-label={t.send}
+            title={t.send}
+            className="flex size-10 shrink-0 cursor-pointer items-center justify-center bg-ink text-wall transition-colors hover:bg-klein disabled:cursor-default disabled:opacity-40 disabled:hover:bg-ink"
+          >
+            <Icon name="send" className="size-4" />
+          </button>
+        </form>
+      </section>
+    </div>
   );
 }
