@@ -112,7 +112,8 @@ export function ChatPanel({
   }
 
   return (
-    // กรอบเท่ากับส่วนของหน้าที่มองเห็น แผงชิดขอบล่างของกรอบ ตัวกรอบเองไม่รับการแตะหรือคลิก
+    // กรอบเท่ากับส่วนของหน้าที่มองเห็น ตัวกรอบเองไม่รับการแตะหรือคลิก
+    // จอแคบกว่า 640 px แผงเต็มกรอบ คือเต็มจอ จอที่กว้างกว่าแผงเป็นกล่องชิดมุมขวาล่างของกรอบ
     <div
       ref={frame}
       className="pointer-events-none fixed inset-x-0 top-[var(--frame-top,0px)] z-20 flex h-[var(--frame-height,100%)] items-end justify-end sm:p-5"
@@ -122,7 +123,7 @@ export function ChatPanel({
         role="dialog"
         aria-label={t.title}
         hidden={!open}
-        className="pointer-events-auto flex h-[min(34rem,85dvh)] max-h-full w-full flex-col border-t border-ink bg-wall sm:w-[24rem] sm:border"
+        className="pointer-events-auto flex h-full max-h-full w-full flex-col border-ink bg-wall sm:h-[min(34rem,85dvh)] sm:w-[24rem] sm:border"
       >
         <header className="flex items-center justify-between gap-4 border-b border-pencil py-3 pl-4 pr-3">
           <h2 className="text-label font-semibold">{t.title}</h2>
