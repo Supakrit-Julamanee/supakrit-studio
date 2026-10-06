@@ -42,34 +42,48 @@ export function ChatPanel({
     list.current?.scrollTo({ top: list.current.scrollHeight });
   }, [turns, pending, error]);
 
-  // แป้นพิมพ์บนจอของมือถือบังส่วนล่างของหน้า แต่ขอบล่างที่ position: fixed ยึดอยู่ไม่ขยับตาม
-  // แผงที่ชิดขอบล่างจึงถูกบังไปพร้อมช่องพิมพ์ กรอบของแผงจึงตามส่วนของหน้าที่มองเห็นจริง (visual viewport)
-  // เมื่อแป้นพิมพ์เปิด แผงจะอยู่เหนือแป้นพิมพ์และสูงไม่เกินส่วนที่มองเห็น
+  // ความสูงของรายการเปลี่ยน (แป้นพิมพ์เปิดหรือปิด หมุนจอ เปิดแผงอีกครั้ง) แล้วข้อความล่าสุดต้องยังอยู่ในสายตา
+  useEffect(() => {
+    const element = list.current;
+    if (!element) return;
+    const observer = new ResizeObserver(() =>
+      element.scrollTo({ top: element.scrollHeight }),
+    );
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
+  // แป้นพิมพ์บนจอมี 2 แบบ แบบแรกเบราว์เซอร์ย่อพื้นที่ของหน้าให้เอง (Chrome บน Android ตาม siteViewport
+  // ใน site-metadata.ts) กรอบของแผงซึ่งเต็มจอด้วย CSS จะย่อตามโดยไม่ต้องใช้โค้ดนี้
+  // แบบที่สองแป้นพิมพ์ทับหน้าโดยพื้นที่ที่ position: fixed ยึดอยู่ไม่ย่อ (Safari บน iOS) ช่องพิมพ์จึงถูกบัง
+  // กรณีนั้นอ่านส่วนที่มองเห็นจริงจาก visual viewport แล้วบอกกรอบว่าถูกบังด้านบนและด้านล่างเท่าไร
   useEffect(() => {
     const viewport = window.visualViewport;
-    const style = frame.current?.style;
-    if (!open || !viewport || !style) return;
+    const element = frame.current;
+    if (!open || !viewport || !element) return;
 
     const fit = () => {
-      // ตอนผู้ชมซูมหน้า กรอบกลับไปเท่ากับทั้งจอตามค่าเริ่มต้นใน className
-      const zoomed = Math.abs(viewport.scale - 1) > 0.01;
-      style.setProperty(
-        "--frame-top",
-        zoomed ? null : `${viewport.offsetTop}px`,
+      // ตอนผู้ชมซูมหน้า ไม่นับว่ามีอะไรบัง
+      const zoomed = viewport.scale > 1.01;
+      const top = zoomed ? 0 : viewport.offsetTop;
+      const bottom = zoomed
+        ? 0
+        : element.getBoundingClientRect().height - top - viewport.height;
+      // ต่างกันไม่ถึง 1 px เป็นเศษจากการปัดค่า ไม่ใช่ส่วนที่ถูกบัง
+      element.style.setProperty("--covered-top", `${top < 1 ? 0 : top}px`);
+      element.style.setProperty(
+        "--covered-bottom",
+        `${bottom < 1 ? 0 : bottom}px`,
       );
-      style.setProperty(
-        "--frame-height",
-        zoomed ? null : `${viewport.height}px`,
-      );
-      // แผงเปลี่ยนความสูงแล้ว ข้อความล่าสุดต้องยังอยู่ในสายตา
-      if (!zoomed) list.current?.scrollTo({ top: list.current.scrollHeight });
     };
     fit();
     viewport.addEventListener("resize", fit);
     viewport.addEventListener("scroll", fit);
+    window.addEventListener("resize", fit);
     return () => {
       viewport.removeEventListener("resize", fit);
       viewport.removeEventListener("scroll", fit);
+      window.removeEventListener("resize", fit);
     };
   }, [open]);
 
@@ -112,18 +126,18 @@ export function ChatPanel({
   }
 
   return (
-    // กรอบเท่ากับส่วนของหน้าที่มองเห็น ตัวกรอบเองไม่รับการแตะหรือคลิก
+    // กรอบเต็มจอ หักส่วนที่แป้นพิมพ์บังออกด้วย padding ตัวกรอบเองไม่รับการแตะหรือคลิก
     // จอแคบกว่า 640 px แผงเต็มกรอบ คือเต็มจอ จอที่กว้างกว่าแผงเป็นกล่องชิดมุมขวาล่างของกรอบ
     <div
       ref={frame}
-      className="pointer-events-none fixed inset-x-0 top-[var(--frame-top,0px)] z-20 flex h-[var(--frame-height,100%)] items-end justify-end sm:p-5"
+      className="pointer-events-none fixed inset-0 z-20 flex items-end justify-end pt-[var(--covered-top,0px)] pb-[var(--covered-bottom,0px)]"
     >
       <section
         id={id}
         role="dialog"
         aria-label={t.title}
         hidden={!open}
-        className="pointer-events-auto flex h-full max-h-full w-full flex-col border-ink bg-wall sm:h-[min(34rem,85dvh)] sm:w-[24rem] sm:border"
+        className="pointer-events-auto flex h-full max-h-full w-full flex-col border-ink bg-wall sm:m-5 sm:h-[min(34rem,85dvh)] sm:max-h-[calc(100%-2.5rem)] sm:w-[24rem] sm:border"
       >
         <header className="flex items-center justify-between gap-4 border-b border-pencil py-3 pl-4 pr-3">
           <h2 className="text-label font-semibold">{t.title}</h2>
