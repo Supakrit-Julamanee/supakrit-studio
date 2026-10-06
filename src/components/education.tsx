@@ -1,6 +1,7 @@
 import Image from "next/image";
+import kmutnbLogo from "@/assets/logos/kmutnb.png";
 import type { Content } from "@/content";
-import { logos, thesis } from "@/content/shared";
+import { thesis } from "@/content/shared";
 import { Section } from "./section";
 
 export function Education({ t }: { t: Content }) {
@@ -14,15 +15,13 @@ export function Education({ t }: { t: Content }) {
         <div className="flex items-start gap-4 md:col-span-9 md:col-start-4 lg:gap-5">
           {/* ตราสีตามต้นฉบับ: ชื่อมหาวิทยาลัยอยู่ในข้อความแล้ว จึงไม่ใส่ alt ซ้ำ */}
           <Image
-            src={logos.kmutnb}
+            src={kmutnbLogo}
             alt=""
             sizes="4.5rem"
             className="size-16 shrink-0 lg:size-18"
           />
           <div className="self-baseline">
-            <h3 className="text-balance text-heading font-light">
-              {degree}
-            </h3>
+            <h3 className="text-balance text-heading font-light">{degree}</h3>
             <p className="mt-2 text-lead">{school}</p>
           </div>
         </div>

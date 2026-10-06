@@ -95,16 +95,12 @@
     width: 100%;
     max-width: 82rem;
     padding-inline: 1.25rem;
-  }
 
-  @media (min-width: 40rem) {
-    .shell {
+    @variant sm {
       padding-inline: 2rem;
     }
-  }
 
-  @media (min-width: 64rem) {
-    .shell {
+    @variant lg {
       padding-inline: 3rem;
     }
   }
@@ -114,10 +110,10 @@
     text-decoration-thickness: 1px;
     text-underline-offset: 0.3em;
     transition: color 150ms;
-  }
 
-  .link:hover {
-    color: var(--color-klein);
+    &:hover {
+      color: var(--color-klein);
+    }
   }
 }
 
@@ -162,9 +158,6 @@
 @keyframes drawing-stroke {
   from {
     stroke-dashoffset: 220;
-  }
-  to {
-    stroke-dashoffset: 0;
   }
 }
 

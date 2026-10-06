@@ -1,23 +1,20 @@
-import { ThemeScript } from "@/components/theme-script";
+import { IBM_Plex_Sans_Thai_Looped } from "next/font/google";
+import { SiteDocument } from "../site-document";
 import { siteMetadata } from "../site-metadata";
-import { fontVariables } from "./fonts";
 import "../globals.css";
+
+const font = IBM_Plex_Sans_Thai_Looped({
+  variable: "--font-plex-looped",
+  weight: ["300", "400", "600"],
+  subsets: ["thai", "latin"],
+});
 
 export const metadata = siteMetadata("th");
 
 export default function RootLayout({ children }: LayoutProps<"/th">) {
   return (
-    // suppressHydrationWarning: ThemeScript อาจใส่ data-theme ก่อน React เริ่มทำงาน
-    <html
-      lang="th"
-      data-theme="light"
-      className={`${fontVariables} antialiased`}
-      suppressHydrationWarning
-    >
-      <head>
-        <ThemeScript />
-      </head>
-      <body>{children}</body>
-    </html>
+    <SiteDocument locale="th" fontVariable={font.variable}>
+      {children}
+    </SiteDocument>
   );
 }

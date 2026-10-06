@@ -25,7 +25,7 @@ export function Contact({ t }: { t: Content }) {
             <dd className="min-w-0 md:col-span-9" lang="en">
               <a
                 href={href}
-                className="link [overflow-wrap:anywhere]"
+                className="link wrap-anywhere"
                 {...(href.startsWith("http") && {
                   target: "_blank",
                   rel: "noopener noreferrer",
@@ -34,7 +34,9 @@ export function Contact({ t }: { t: Content }) {
                 {/* ลิงก์ที่ยาวเกินจอขึ้นบรรทัดใหม่หลังเครื่องหมายทับ ชื่อบัญชีที่มีขีดไม่ถูกตัดกลาง */}
                 {text.split("/").map((part, index, parts) => (
                   <Fragment key={part}>
-                    <span className={part.includes("-") ? "whitespace-nowrap" : ""}>
+                    <span
+                      className={part.includes("-") ? "whitespace-nowrap" : ""}
+                    >
                       {part}
                       {index < parts.length - 1 && "/"}
                     </span>

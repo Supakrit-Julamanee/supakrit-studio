@@ -1,8 +1,8 @@
-import { links, logos, nowrap, profile, stacks } from "./shared";
+import { MAX_QUESTION_CHARS } from "./chat-protocol";
+import { links, nowrap, orgs, profile } from "./shared";
 import type { Content } from "./types";
 
 export const th: Content = {
-  locale: "th",
   other: { locale: "en", label: "English" },
   meta: {
     title: "Supakrit Julamanee, Full Stack Developer | supakrit studio",
@@ -61,17 +61,14 @@ export const th: Content = {
   },
   jobs: [
     {
+      ...orgs.unixdev,
       org: "บริษัท ยูนิกซ์เดฟ จำกัด",
-      logo: logos.unixdev,
-      logoDark: logos.unixdevDark,
-      role: "Frontend Developer",
       details: [
         `งานประจำ ${nowrap("พ.ค. 2025 – ส.ค. 2026")}`,
         `ฝึกงาน ${nowrap("ก.พ. 2025 – เม.ย. 2025")}`,
         "รวม 1 ปี 7 เดือน",
         "กรุงเทพมหานคร",
       ],
-      stack: stacks.unixdev,
       works: [
         {
           title: "พัฒนาเว็บไซต์ให้ลูกค้า",
@@ -100,16 +97,13 @@ export const th: Content = {
       ],
     },
     {
+      ...orgs.skyfrog,
       org: "บริษัท สกายฟร็อก จำกัด",
-      logo: logos.skyfrog,
-      logoDark: logos.skyfrogDark,
-      role: "Software Developer",
       details: [
         `ฝึกงาน ${nowrap("มิ.ย. 2024 – ธ.ค. 2024")}`,
         "7 เดือน",
         "กรุงเทพมหานคร",
       ],
-      stack: stacks.skyfrog,
       works: [
         {
           title: "Full Stack Development",
@@ -133,7 +127,11 @@ export const th: Content = {
   education: {
     degree: "วิทยาศาสตรบัณฑิต (วิทยาการคอมพิวเตอร์)",
     school: "มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ",
-    details: ["จบการศึกษา ปี 2025", "เกียรตินิยมอันดับ 2", "เกรดเฉลี่ยสะสม 3.25"],
+    details: [
+      "จบการศึกษา ปี 2025",
+      "เกียรตินิยมอันดับ 2",
+      "เกรดเฉลี่ยสะสม 3.25",
+    ],
     thesisLabel: "ปริญญานิพนธ์",
   },
   contact: [
@@ -158,8 +156,7 @@ export const th: Content = {
     placeholder: "พิมพ์คำถาม",
     send: "ส่ง",
     thinking: "กำลังตอบ\u2026",
-    you: "คุณ",
-    assistant: "ผู้ช่วย",
+    speakers: { user: "คุณ", assistant: "ผู้ช่วย" },
     suggestions: [
       "ถนัดเทคโนโลยีอะไรบ้าง",
       "เคยทำงานที่ไหนมาบ้าง",
@@ -167,9 +164,8 @@ export const th: Content = {
     ],
     errors: {
       rate_limited: "ตอนนี้มีคำถามเข้ามามากเกินไป ลองใหม่ในอีกหนึ่งนาที",
-      too_long: "คำถามยาวเกินไป พิมพ์ได้ไม่เกิน 500 ตัวอักษร",
-      unavailable:
-        "ผู้ช่วยตอบไม่ได้ในตอนนี้ ส่งอีเมลหาศุภกฤตได้จากส่วนติดต่อ",
+      too_long: `คำถามยาวเกินไป พิมพ์ได้ไม่เกิน ${MAX_QUESTION_CHARS} ตัวอักษร`,
+      unavailable: "ผู้ช่วยตอบไม่ได้ในตอนนี้ ส่งอีเมลหาศุภกฤตได้จากส่วนติดต่อ",
     },
   },
 };

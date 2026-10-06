@@ -2,11 +2,14 @@ import Image from "next/image";
 import portrait from "@/assets/portrait.jpg";
 import type { Content } from "@/content";
 import { links, profile } from "@/content/shared";
-import { buildMonths, countWorked, type Stroke } from "@/content/timeline";
+import {
+  buildMonths,
+  countWorked,
+  strokes,
+  yearRange,
+} from "@/content/timeline";
 import { Icon, type IconName } from "./icon";
 import { HatchSwatch, MonthDrawing } from "./month-drawing";
-
-const strokes: Stroke[] = ["vertical", "horizontal"];
 
 export function Hero({ t }: { t: Content }) {
   const months = buildMonths(t.drawing);
@@ -37,10 +40,7 @@ export function Hero({ t }: { t: Content }) {
         </div>
 
         <div className="mt-7 md:col-span-8 md:col-start-1 md:row-start-1 md:mt-0">
-          <h1
-            id="hero-title"
-            className="text-display font-light"
-          >
+          <h1 id="hero-title" className="text-display font-light">
             {t.hero.name}
           </h1>
           <p className="mt-3 text-lead md:mt-4" lang="en">
@@ -84,28 +84,26 @@ export function Hero({ t }: { t: Content }) {
       </div>
 
       {/* ป้ายผลงานของภาพวาด */}
-      <div className="mt-6">
-        <div className="gap-x-12 text-label sm:flex">
-          <div>
-            <p className="font-semibold">
-              {t.drawing.worked(countWorked(months), profile.years)}
-            </p>
-            <p className="text-graphite">
-              <span className="dark:hidden">{t.drawing.medium.light}</span>
-              <span className="hidden dark:inline">{t.drawing.medium.dark}</span>
-            </p>
-          </div>
-          <div className="mt-3 text-graphite sm:mt-0">
-            <p>{t.drawing.unit}</p>
-            <ul className="mt-1.5 flex flex-wrap gap-x-6 gap-y-1.5">
-              {strokes.map((stroke) => (
-                <li key={stroke} className="flex items-center gap-2.5">
-                  <HatchSwatch stroke={stroke} />
-                  {t.drawing.legend[stroke]}
-                </li>
-              ))}
-            </ul>
-          </div>
+      <div className="mt-6 gap-x-12 text-label sm:flex">
+        <div>
+          <p className="font-semibold">
+            {t.drawing.worked(countWorked(months), yearRange)}
+          </p>
+          <p className="text-graphite">
+            <span className="dark:hidden">{t.drawing.medium.light}</span>
+            <span className="hidden dark:inline">{t.drawing.medium.dark}</span>
+          </p>
+        </div>
+        <div className="mt-3 text-graphite sm:mt-0">
+          <p>{t.drawing.unit}</p>
+          <ul className="mt-1.5 flex flex-wrap gap-x-6 gap-y-1.5">
+            {strokes.map((stroke) => (
+              <li key={stroke} className="flex items-center gap-2.5">
+                <HatchSwatch stroke={stroke} />
+                {t.drawing.legend[stroke]}
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </section>

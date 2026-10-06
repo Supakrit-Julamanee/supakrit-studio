@@ -2,12 +2,12 @@
 // เนื้อหาสร้างจากชุดข้อมูลเดียวกับที่ใช้แสดงหน้าเว็บ แก้หน้าเว็บแล้วบอทรู้ตามโดยไม่ต้องแก้ไฟล์นี้
 import { content } from "./index";
 import { profile, skills, thesis } from "./shared";
-import { buildMonths, countWorked } from "./timeline";
+import { buildMonths, countWorked, yearRange } from "./timeline";
 import type { Content } from "./types";
 
 // เอาเว้นวรรคแบบไม่ตัดบรรทัดและ word joiner ที่ใส่ไว้เพื่อการจัดหน้าออก
 const plain = (text: string) =>
-  text.replaceAll(" ", " ").replaceAll("⁠", "");
+  text.replaceAll("\u00a0", " ").replaceAll("\u2060", "");
 
 function pageText(t: Content): string {
   const months = countWorked(buildMonths(t.drawing));
@@ -26,7 +26,7 @@ function pageText(t: Content): string {
       `Name: ${t.hero.name}`,
       `Role: ${profile.role}`,
       `Introduction: ${t.hero.lead} ${t.hero.summary}`,
-      `Total experience shown: ${t.drawing.worked(months, profile.years)}`,
+      `Total experience shown: ${t.drawing.worked(months, yearRange)}`,
       "",
       `${t.sections.experience}:`,
       ...jobs,

@@ -1,14 +1,11 @@
 "use client";
 
-import { type FormEvent, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { MAX_QUESTION_CHARS, type Turn } from "@/content/chat-protocol";
 import type { ChatText } from "@/content/types";
 import { Icon } from "./icon";
 
-type Turn = { role: "user" | "assistant"; content: string };
 type ErrorCode = keyof ChatText["errors"];
-
-// ตรงกับขีดจำกัดใน src/app/api/chat/route.ts
-const MAX_QUESTION_CHARS = 500;
 
 export function ChatPanel({
   id,
@@ -82,11 +79,6 @@ export function ChatPanel({
     }
   }
 
-  function onSubmit(event: FormEvent) {
-    event.preventDefault();
-    void ask(draft);
-  }
-
   return (
     <section
       id={id}
@@ -132,25 +124,20 @@ export function ChatPanel({
           </ul>
         )}
 
-        {turns.map(({ role, content }, index) =>
-          role === "user" ? (
-            <p
-              key={index}
-              className="ml-auto w-fit max-w-[85%] whitespace-pre-wrap bg-ink px-3 py-2 text-wall [overflow-wrap:anywhere]"
-            >
-              <span className="sr-only">{t.you}: </span>
-              {content}
-            </p>
-          ) : (
-            <p
-              key={index}
-              className="max-w-[92%] whitespace-pre-wrap [overflow-wrap:anywhere]"
-            >
-              <span className="sr-only">{t.assistant}: </span>
-              {content}
-            </p>
-          ),
-        )}
+        {/* คำถามของผู้ชมอยู่ชิดขวาบนพื้นสีหมึก คำตอบอยู่ชิดซ้ายเป็นตัวหนังสือล้วน */}
+        {turns.map(({ role, content }, index) => (
+          <p
+            key={index}
+            className={`whitespace-pre-wrap wrap-anywhere ${
+              role === "user"
+                ? "ml-auto w-fit max-w-[85%] bg-ink px-3 py-2 text-wall"
+                : "max-w-[92%]"
+            }`}
+          >
+            <span className="sr-only">{t.speakers[role]}: </span>
+            {content}
+          </p>
+        ))}
 
         {pending && <p className="text-graphite">{t.thinking}</p>}
         {error && (
@@ -161,7 +148,10 @@ export function ChatPanel({
       </div>
 
       <form
-        onSubmit={onSubmit}
+        onSubmit={(event) => {
+          event.preventDefault();
+          void ask(draft);
+        }}
         className="flex items-center gap-2 border-t border-pencil p-3"
       >
         {/* ขนาด 17 px: iOS จะไม่ซูมหน้าเมื่อแตะช่องพิมพ์ */}

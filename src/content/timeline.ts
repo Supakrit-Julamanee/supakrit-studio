@@ -1,15 +1,15 @@
 // ข้อมูลของภาพวาดในส่วนแรกของหน้า: หนึ่งช่องคือหนึ่งเดือน
 // เส้นตั้ง = งาน Frontend, เส้นนอน = งาน Backend
+import { orgs, type OrgId } from "./shared";
 
-export type Stroke = "vertical" | "horizontal";
+export const strokes = ["vertical", "horizontal"] as const;
 
-type OrgId = "skyfrog" | "unixdev";
+export type Stroke = (typeof strokes)[number];
 
 type Period = {
   from: [year: number, month: number];
   to: [year: number, month: number];
   org: OrgId;
-  role: string;
   strokes: Stroke[];
 };
 
@@ -18,24 +18,21 @@ const periods: Period[] = [
     from: [2024, 6],
     to: [2024, 12],
     org: "skyfrog",
-    role: "Software Developer",
     strokes: ["vertical", "horizontal"],
   },
-  {
-    from: [2025, 2],
-    to: [2026, 8],
-    org: "unixdev",
-    role: "Frontend Developer",
-    strokes: ["vertical"],
-  },
+  { from: [2025, 2], to: [2026, 8], org: "unixdev", strokes: ["vertical"] },
 ];
 
 export const years = [2024, 2025, 2026];
+
+// ช่วงปีบนป้ายผลงานของภาพวาด
+export const yearRange = `${years[0]}–${years.at(-1)}`;
 
 // ข้อความของภาพวาดที่ต่างกันตามภาษา
 export type TimelineLabels = {
   // 12 ชื่อ เริ่มที่ ม.ค.
   monthNames: string[];
+  // ชื่อสั้นของบริษัท
   orgs: Record<OrgId, string>;
 };
 
@@ -51,10 +48,10 @@ export type Month = {
 
 const serial = (year: number, month: number) => year * 12 + month;
 
-export function buildMonths({ monthNames, orgs }: TimelineLabels): Month[] {
+export function buildMonths(labels: TimelineLabels): Month[] {
   let order = 0;
   return years.flatMap((year) =>
-    monthNames.map((name, index) => {
+    labels.monthNames.map((name, index) => {
       const at = serial(year, index + 1);
       const period = periods.find(
         (p) => at >= serial(...p.from) && at <= serial(...p.to),
@@ -64,7 +61,7 @@ export function buildMonths({ monthNames, orgs }: TimelineLabels): Month[] {
         year,
         month: index,
         label: period
-          ? `${title}: ${orgs[period.org]}, ${period.role}`
+          ? `${title}: ${labels.orgs[period.org]}, ${orgs[period.org].role}`
           : title,
         strokes: period?.strokes ?? [],
         order: period ? order++ : null,

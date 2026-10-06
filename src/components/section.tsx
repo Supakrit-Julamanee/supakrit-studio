@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import type { Content } from "@/content";
-import type { SectionId } from "@/content/types";
+import type { SectionId } from "@/content/shared";
 
 export function Section({
   id,

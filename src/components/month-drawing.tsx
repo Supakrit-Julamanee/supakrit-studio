@@ -106,7 +106,7 @@ export function MonthDrawing({
   description: string;
 }) {
   return (
-    <div>
+    <>
       <p className="sr-only">{description}</p>
 
       {/* จอกว้าง: 12 เดือนต่อแถว หนึ่งแถวต่อหนึ่งปี */}
@@ -121,18 +121,14 @@ export function MonthDrawing({
             </li>
           ))}
         </ol>
-        <ol className="col-start-1 grid grid-rows-3">
+        <ol className="col-start-1 grid auto-rows-fr">
           {years.map((year) => (
             <li key={year} className="self-center">
               {year}
             </li>
           ))}
         </ol>
-        <Sheet
-          cells={months}
-          cols={12}
-          className="col-start-2"
-        />
+        <Sheet cells={months} cols={12} className="col-start-2" />
       </div>
 
       {/* จอแคบ: 6 เดือนต่อแถว แยกเป็นรายปี */}
@@ -144,6 +140,6 @@ export function MonthDrawing({
           </div>
         ))}
       </div>
-    </div>
+    </>
   );
 }

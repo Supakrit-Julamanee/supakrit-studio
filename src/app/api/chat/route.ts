@@ -1,4 +1,5 @@
 import { systemInstruction } from "@/content/chat-context";
+import { MAX_QUESTION_CHARS, type Turn } from "@/content/chat-protocol";
 
 // แชตบอท: รับคำถามจากหน้าเว็บ ส่งให้ Gemini พร้อมเนื้อหาของเว็บ แล้วคืนคำตอบ
 // API key อยู่ฝั่ง server เท่านั้น (GEMINI_API_KEY) ไม่ถูกส่งไปที่เบราว์เซอร์
@@ -10,14 +11,12 @@ const MODEL = process.env.GEMINI_MODEL ?? "gemini-3.5-flash-lite";
 const API_BASE =
   process.env.GEMINI_API_BASE ?? "https://generativelanguage.googleapis.com";
 
-const MAX_QUESTION_CHARS = 500;
 const MAX_ANSWER_CHARS = 2000;
 // ส่งเฉพาะข้อความล่าสุดไม่เกินจำนวนนี้ให้โมเดล
 const MAX_TURNS = 8;
 const PER_MINUTE = 6;
 const PER_DAY = 40;
 
-type Turn = { role: "user" | "assistant"; content: string };
 type ErrorCode = "invalid" | "too_long" | "rate_limited" | "unavailable";
 
 const fail = (error: ErrorCode, status: number) =>

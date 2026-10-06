@@ -1,5 +1,4 @@
-// ข้อมูลที่เหมือนกันทุกภาษา: ชื่อ ลิงก์ โลโก้ และชื่อเทคโนโลยี
-import kmutnbLogo from "@/assets/logos/kmutnb.png";
+// ข้อมูลที่เหมือนกันทุกภาษา: ชื่อ ลิงก์ บริษัท และชื่อเทคโนโลยี
 import skyfrogDarkLogo from "@/assets/logos/skyfrog-dark.svg";
 import skyfrogLogo from "@/assets/logos/skyfrog.svg";
 import unixdevDarkLogo from "@/assets/logos/unixdev-dark.svg";
@@ -10,8 +9,17 @@ export const profile = {
   name: "Supakrit Julamanee",
   nameTh: "ศุภกฤต จุฬามณี",
   role: "Full Stack Developer",
-  years: "2024–2026",
 };
+
+// ส่วนของหน้าตามลำดับ ใช้เป็นเมนูในแถบบนด้วย
+export const sectionIds = [
+  "experience",
+  "skills",
+  "education",
+  "contact",
+] as const;
+
+export type SectionId = (typeof sectionIds)[number];
 
 export const links = {
   email: {
@@ -33,35 +41,43 @@ export const links = {
   },
 };
 
-export const logos = {
-  unixdev: unixdevLogo,
-  unixdevDark: unixdevDarkLogo,
-  skyfrog: skyfrogLogo,
-  skyfrogDark: skyfrogDarkLogo,
-  kmutnb: kmutnbLogo,
+// ข้อมูลของแต่ละบริษัทที่เหมือนกันทุกภาษา ชื่อบริษัทและคำอธิบายงานอยู่ใน en.ts และ th.ts
+// logoDark คือโลโก้แบบที่ใช้บนพื้นมืด
+export const orgs = {
+  unixdev: {
+    logo: unixdevLogo,
+    logoDark: unixdevDarkLogo,
+    role: "Frontend Developer",
+    stack: [
+      "React.js",
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "Next Auth",
+      "ESLint",
+      "Claude Code",
+      "Git",
+    ],
+  },
+  skyfrog: {
+    logo: skyfrogLogo,
+    logoDark: skyfrogDarkLogo,
+    role: "Software Developer",
+    stack: [
+      "C# (.NET 8)",
+      "LINQ",
+      "Microservices",
+      "Ext JS",
+      "PostgreSQL",
+      "SQL",
+      "Git",
+    ],
+  },
 };
 
-export const stacks = {
-  unixdev: [
-    "React.js",
-    "Next.js",
-    "TypeScript",
-    "Tailwind CSS",
-    "Next Auth",
-    "ESLint",
-    "Claude Code",
-    "Git",
-  ],
-  skyfrog: [
-    "C# (.NET 8)",
-    "LINQ",
-    "Microservices",
-    "Ext JS",
-    "PostgreSQL",
-    "SQL",
-    "Git",
-  ],
-};
+export type OrgId = keyof typeof orgs;
+
+export type Org = (typeof orgs)[OrgId];
 
 export const skills = [
   {
@@ -119,4 +135,4 @@ export const thesis = {
 // ช่วงเวลาไม่ถูกตัดขึ้นบรรทัดใหม่กลางคัน: ใช้เว้นวรรคแบบไม่ตัดบรรทัด
 // และ word joiner หลังขีด เพราะเบราว์เซอร์ตัดบรรทัดหลังขีดได้
 export const nowrap = (text: string) =>
-  text.replaceAll(" ", " ").replaceAll("–", "–⁠");
+  text.replaceAll(" ", "\u00a0").replaceAll("–", "–\u2060");

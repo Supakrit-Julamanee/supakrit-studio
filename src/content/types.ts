@@ -1,21 +1,17 @@
-import type { StaticImageData } from "next/image";
 import type { IconName } from "@/components/icon";
+import type { Turn } from "./chat-protocol";
 import type { Locale } from "./locale";
+import type { Org, SectionId } from "./shared";
 import type { Stroke, TimelineLabels } from "./timeline";
 
-type Job = {
+// โลโก้ ตำแหน่ง และ stack มาจาก orgs ใน shared.ts ส่วนที่เหลือเป็นข้อความของแต่ละภาษา
+type Job = Org & {
+  // ชื่อทางการของบริษัท
   org: string;
-  logo: StaticImageData;
-  // โลโก้แบบที่ใช้บนพื้นมืด
-  logoDark: StaticImageData;
-  role: string;
   // บรรทัดบนป้ายผลงาน: ช่วงเวลา ระยะเวลา สถานที่
   details: string[];
-  stack: string[];
   works: { title: string; body: string }[];
 };
-
-export type SectionId = "experience" | "skills" | "education" | "contact";
 
 // ข้อความของแชตบอท ส่งให้ Client Component ได้เพราะเป็นข้อความล้วน
 export type ChatText = {
@@ -27,8 +23,7 @@ export type ChatText = {
   send: string;
   thinking: string;
   // ชื่อผู้พูด สำหรับโปรแกรมอ่านหน้าจอ
-  you: string;
-  assistant: string;
+  speakers: Record<Turn["role"], string>;
   suggestions: string[];
   // คีย์ตรงกับรหัสข้อผิดพลาดที่ /api/chat ส่งกลับ
   errors: { rate_limited: string; too_long: string; unavailable: string };
@@ -36,7 +31,6 @@ export type ChatText = {
 
 // ข้อความทั้งหมดของหน้าในหนึ่งภาษา
 export type Content = {
-  locale: Locale;
   // อีกภาษาหนึ่ง: ใช้กับลิงก์สลับภาษา
   other: { locale: Locale; label: string };
   meta: { title: string; description: string; ogLocale: string };

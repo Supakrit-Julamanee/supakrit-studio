@@ -1,9 +1,9 @@
-import { links, logos, nowrap, profile, stacks } from "./shared";
+import { MAX_QUESTION_CHARS } from "./chat-protocol";
+import { links, nowrap, orgs, profile } from "./shared";
 import type { Content } from "./types";
 
 // แปลจากชุดภาษาไทยใน th.ts ทีละข้อ ไม่เพิ่มข้อมูลที่ภาษาไทยไม่มี
 export const en: Content = {
-  locale: "en",
   other: { locale: "th", label: "ไทย" },
   meta: {
     title: "Supakrit Julamanee, Full Stack Developer | supakrit studio",
@@ -61,17 +61,14 @@ export const en: Content = {
   },
   jobs: [
     {
+      ...orgs.unixdev,
       org: "UNIXDEV Co., Ltd.",
-      logo: logos.unixdev,
-      logoDark: logos.unixdevDark,
-      role: "Frontend Developer",
       details: [
         `Full-time ${nowrap("May 2025 – Aug 2026")}`,
         `Internship ${nowrap("Feb 2025 – Apr 2025")}`,
         "1 year 7 months in total",
         "Bangkok",
       ],
-      stack: stacks.unixdev,
       works: [
         {
           title: "Client websites",
@@ -100,16 +97,13 @@ export const en: Content = {
       ],
     },
     {
+      ...orgs.skyfrog,
       org: "Skyfrog Co., Ltd.",
-      logo: logos.skyfrog,
-      logoDark: logos.skyfrogDark,
-      role: "Software Developer",
       details: [
         `Internship ${nowrap("Jun 2024 – Dec 2024")}`,
         "7 months",
         "Bangkok",
       ],
-      stack: stacks.skyfrog,
       works: [
         {
           title: "Full Stack Development",
@@ -158,8 +152,7 @@ export const en: Content = {
     placeholder: "Type a question",
     send: "Send",
     thinking: "Answering\u2026",
-    you: "You",
-    assistant: "Assistant",
+    speakers: { user: "You", assistant: "Assistant" },
     suggestions: [
       "What does he work with?",
       "Where has he worked?",
@@ -167,7 +160,7 @@ export const en: Content = {
     ],
     errors: {
       rate_limited: "Too many questions right now. Try again in a minute.",
-      too_long: "That question is too long. Keep it under 500 characters.",
+      too_long: `That question is too long. Keep it under ${MAX_QUESTION_CHARS} characters.`,
       unavailable:
         "The assistant can\u2019t answer right now. You can email Supakrit from the contact section instead.",
     },

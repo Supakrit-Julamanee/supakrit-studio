@@ -1,17 +1,14 @@
 import Link from "next/link";
 import type { Content } from "@/content";
 import { localePath } from "@/content/locale";
-import { profile } from "@/content/shared";
-import type { SectionId } from "@/content/types";
+import { profile, sectionIds } from "@/content/shared";
 import { Flag } from "./flag";
 import { MobileMenu } from "./mobile-menu";
 import { StudioMark } from "./studio-mark";
 import { ThemeToggle } from "./theme-toggle";
 
-const sections: SectionId[] = ["experience", "skills", "education", "contact"];
-
 export function SiteHeader({ t }: { t: Content }) {
-  const items = sections.map((id) => ({
+  const items = sectionIds.map((id) => ({
     href: `#${id}`,
     label: t.sections[id],
   }));
