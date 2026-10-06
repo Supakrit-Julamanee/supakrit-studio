@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import type { ChatText } from "@/content/types";
-import { Icon } from "./icon";
+import { ChatMascot } from "./chat-mascot";
 
 // โค้ดของแผงแชตโหลดครั้งแรกที่กดเปิดเท่านั้น หน้าเว็บตอนโหลดจึงมีแค่ปุ่มนี้
 const ChatPanel = dynamic(
@@ -36,6 +36,8 @@ export function ChatWidget({ t }: { t: ChatText }) {
           onClose={() => setOpen(false)}
         />
       )}
+      {/* ที่ว่างท้ายหน้า ให้ปุ่มที่ลอยอยู่ไม่ทับข้อความของ footer เมื่อเลื่อนลงสุด */}
+      <div aria-hidden="true" className="h-12" />
       <button
         ref={launcher}
         type="button"
@@ -46,11 +48,17 @@ export function ChatWidget({ t }: { t: ChatText }) {
         aria-label={t.open}
         aria-expanded={open}
         aria-controls={PANEL_ID}
-        title={t.open}
         hidden={open}
-        className="fixed bottom-5 right-5 z-20 flex size-12 cursor-pointer items-center justify-center bg-ink text-wall transition-colors hover:bg-klein"
+        className="group fixed bottom-3 right-3 z-20 size-16 cursor-pointer"
       >
-        <Icon name="chat" className="size-5" />
+        {/* ป้ายชื่อ แสดงเมื่อชี้เมาส์หรือโฟกัสด้วยแป้นพิมพ์ */}
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute right-full top-1/2 -translate-y-1/2 whitespace-nowrap bg-ink px-2.5 py-1 text-label text-wall opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+        >
+          {t.open}
+        </span>
+        <ChatMascot className="size-16 origin-[50%_90%] overflow-visible transition-transform duration-200 group-hover:scale-110 motion-reduce:transition-none" />
       </button>
     </>
   );

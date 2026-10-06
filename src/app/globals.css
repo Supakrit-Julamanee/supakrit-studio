@@ -13,13 +13,15 @@
 @theme {
   /* ผนังขาว หมึกดำ กราไฟต์สำหรับข้อความรอง ดินสอสำหรับเส้นบาง
      น้ำเงินใช้กับสถานะของลิงก์ โฟกัส และข้อความที่ถูกเลือก
-     ค่าของโหมดมืดอยู่ใน :root ด้านล่าง brand คือสีของเครื่องหมาย studio ไม่เปลี่ยนตามโหมด */
+     ค่าของโหมดมืดอยู่ใน :root ด้านล่าง brand คือสีของเครื่องหมาย studio ไม่เปลี่ยนตามโหมด
+     mascot คือสีตัวการ์ตูนของปุ่มแชต เท่ากับ brand ในโหมดสว่าง และสว่างขึ้นในโหมดมืดให้เห็นบนพื้นดำ */
   --color-wall: #ffffff;
   --color-ink: #000000;
   --color-graphite: #595959;
   --color-pencil: #c9c9c9;
   --color-klein: #002fa7;
   --color-brand: #002fa7;
+  --color-mascot: #002fa7;
 
   /* ชุดขนาดบนจอกว้าง: 14, 17, 21, 26 ห่างกันขั้นละราว 1.25 เท่า แล้วเป็น 40 และ 64 สำหรับหัวข้อ
      ข้อความเด่นทุกส่วน (heading, list, mail) ใช้ขนาดเดียวกัน */
@@ -55,6 +57,7 @@
       --color-graphite: #a6a6a6;
       --color-pencil: #383838;
       --color-klein: #6f8dff;
+      --color-mascot: #3a5cf0;
     }
   }
 
@@ -129,6 +132,31 @@
     animation: drawing-stroke 900ms cubic-bezier(0.3, 0, 0.3, 1) both;
     animation-delay: calc(350ms + var(--order) * 55ms);
   }
+
+  /* ตัวการ์ตูนของปุ่มแชต: กะพริบตา เหลือบมอง และกระโดดหนึ่งครั้งทุก 5 วินาที */
+  .mascot-body,
+  .mascot-shadow,
+  .mascot-eyes {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  .mascot-body {
+    transform-origin: 50% 100%;
+    animation: mascot-hop 5s ease-in-out infinite;
+  }
+
+  .mascot-shadow {
+    animation: mascot-shadow 5s ease-in-out infinite;
+  }
+
+  .mascot-eyes {
+    animation: mascot-blink 4.4s infinite;
+  }
+
+  .mascot-pupils {
+    animation: mascot-look 7s ease-in-out infinite;
+  }
 }
 
 @keyframes drawing-stroke {
@@ -137,5 +165,61 @@
   }
   to {
     stroke-dashoffset: 0;
+  }
+}
+
+@keyframes mascot-hop {
+  0%,
+  78%,
+  100% {
+    transform: translateY(0) scale(1, 1);
+  }
+  82% {
+    transform: translateY(0) scale(1.05, 0.93);
+  }
+  88% {
+    transform: translateY(-6px) scale(0.97, 1.04);
+  }
+  94% {
+    transform: translateY(0) scale(1.03, 0.96);
+  }
+}
+
+@keyframes mascot-shadow {
+  0%,
+  82%,
+  94%,
+  100% {
+    transform: scale(1);
+  }
+  88% {
+    transform: scale(0.75);
+  }
+}
+
+@keyframes mascot-blink {
+  0%,
+  93%,
+  100% {
+    transform: scaleY(1);
+  }
+  96% {
+    transform: scaleY(0.08);
+  }
+}
+
+@keyframes mascot-look {
+  0%,
+  30%,
+  100% {
+    transform: translateX(0);
+  }
+  40%,
+  55% {
+    transform: translateX(-2px);
+  }
+  65%,
+  85% {
+    transform: translateX(1.5px);
   }
 }
