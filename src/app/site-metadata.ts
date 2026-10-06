@@ -1,14 +1,9 @@
-import type { Metadata, Viewport } from "next";
+import type { Metadata } from "next";
 import { content } from "@/content";
 import { defaultLocale, localePath, type Locale } from "@/content/locale";
 import { profile } from "@/content/shared";
 
 const siteUrl = "https://supakrit-studio.vercel.app";
-
-// เมื่อแป้นพิมพ์บนจอเปิด ให้เบราว์เซอร์ย่อพื้นที่ของหน้าแทนการเอาแป้นพิมพ์มาทับ (Chrome บน Android ทับเป็นค่าเริ่มต้น)
-// แผงแชตซึ่งเต็มจอจึงย่อตาม และช่องพิมพ์อยู่เหนือแป้นพิมพ์เองแบบเดียวกับแอป
-// Safari บน iOS ไม่รู้จักค่านี้และข้ามไป กรณีนั้น chat-panel.tsx จัดการเอง
-export const siteViewport: Viewport = { interactiveWidget: "resizes-content" };
 
 export function siteMetadata(locale: Locale): Metadata {
   const { title, description, ogLocale } = content[locale].meta;

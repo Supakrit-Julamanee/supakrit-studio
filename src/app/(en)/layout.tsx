@@ -1,6 +1,6 @@
 import { IBM_Plex_Sans_Thai_Looped } from "next/font/google";
 import { SiteDocument } from "../site-document";
-import { siteMetadata, siteViewport } from "../site-metadata";
+import { siteMetadata } from "../site-metadata";
 import "../globals.css";
 
 // หน้าอังกฤษไม่มีอักษรไทยที่มองเห็น จึง preload เฉพาะ subset latin
@@ -11,7 +11,6 @@ const font = IBM_Plex_Sans_Thai_Looped({
 });
 
 export const metadata = siteMetadata("en");
-export const viewport = siteViewport;
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
